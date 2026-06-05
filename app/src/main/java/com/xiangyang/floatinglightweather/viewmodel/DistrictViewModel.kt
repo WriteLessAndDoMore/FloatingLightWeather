@@ -28,13 +28,13 @@ class DistrictViewModel : ViewModel() {
      */
     fun searchLocation(keyword: String) {
         try {
+            // 避免用户打字太快导致上一次还没有请求完，导致直接发出了下一次请求
+            searchJob?.cancel()
             // 如果用户清空搜索框，直接不请求网络
             if (keyword.isBlank()) {
                 _subDistrictsResult.value = emptyList()
                 return
             }
-            // 避免用户打字太快导致上一次还没有请求完，导致直接发出了下一次请求
-            searchJob?.cancel()
             searchJob = viewModelScope.launch {
                 // 🌟 【防抖逻辑】：让协程在原地先睡 300 毫秒。
                 // 如果用户连续输入时，输入300ms内协程会被上面的 cancel() 杀死，

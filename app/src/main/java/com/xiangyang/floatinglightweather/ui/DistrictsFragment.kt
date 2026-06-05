@@ -45,27 +45,26 @@ class DistrictsFragment : Fragment() {
     private fun searchLocation() {
         binding.etSearch.addTextChangedListener {
             val content = it.toString()
-            if (content.isNotEmpty()) {
-                viewModel.searchLocation(content)
-            } else {
-                binding.rvDistricts.visibility = View.GONE
-                binding.ivBg.visibility = View.VISIBLE
-                viewModel.districtList.clear()
-                adapter.notifyDataSetChanged()
-            }
+            viewModel.searchLocation(content)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserve() {
         viewModel.subDistrictResult.observe(viewLifecycleOwner) { districts ->
-            districts?.let {
+            if (!districts.isNullOrEmpty()) {
                 binding.rvDistricts.visibility = View.VISIBLE
                 binding.ivBg.visibility = View.GONE
                 viewModel.districtList.clear()
                 viewModel.districtList.addAll(districts)
                 adapter.notifyDataSetChanged()
-            } ?: Toast.makeText(activity, "未查询到任何地点", Toast.LENGTH_LONG).show()
+            } else {
+                binding.rvDistricts.visibility = View.GONE
+                binding.ivBg.visibility = View.VISIBLE
+                viewModel.districtList.clear()
+                adapter.notifyDataSetChanged()
+            }
+            /*Toast.makeText(activity, "未查询到任何地点", Toast.LENGTH_LONG).show()*/
         }
 
     }

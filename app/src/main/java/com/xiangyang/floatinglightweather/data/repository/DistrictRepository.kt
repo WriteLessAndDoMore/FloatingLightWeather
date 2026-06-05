@@ -18,6 +18,7 @@ object DistrictRepository {
      * @return 干净的子区域列表，如果失败则返回空列表
      */
     suspend fun getDistrictInfo(keyword: String): List<District> {
+        LogUtil.d("getDistrictInfo keyword: $keyword")
         //使用 withContext 强制将这个函数里的所有代码调度到 IO 线程执行
         // 确保哪怕上层调用者写错了，这个耗时操作也绝对 100% 不会卡死主线程
         return withContext(Dispatchers.IO) {
