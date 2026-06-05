@@ -63,8 +63,13 @@ class DistrictsFragment : Fragment() {
                 binding.ivBg.visibility = View.VISIBLE
                 viewModel.districtList.clear()
                 adapter.notifyDataSetChanged()
+                if (binding.etSearch.text.isNotBlank()) Toast.makeText(
+                    activity,
+                    "未查询到任何地点",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-            /*Toast.makeText(activity, "未查询到任何地点", Toast.LENGTH_LONG).show()*/
+
         }
 
     }
