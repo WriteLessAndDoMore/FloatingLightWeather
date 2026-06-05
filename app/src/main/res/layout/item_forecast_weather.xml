@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_margin="15dp">
+    <TextView
+        android:id="@+id/tv_forecast_data"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:layout_gravity="center_vertical"
+        android:textSize="28sp"
+        android:text="2026-06-06"/>
+    <ImageView
+        android:id="@+id/iv_forecast_icon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_light_snow"/>
+    <TextView
+        android:id="@+id/tv_forecast_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:textSize="28sp"
+        android:text="多云"/>
+
+    <TextView
+        android:id="@+id/tv_forecast_temp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:layout_gravity="center_vertical"
+        android:gravity="end"
+        android:textSize="28sp"
+        android:text="4~13°C"/>
+
+
+</LinearLayout>

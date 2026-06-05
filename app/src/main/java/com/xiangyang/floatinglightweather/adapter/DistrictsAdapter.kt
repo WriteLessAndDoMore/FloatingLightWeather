@@ -1,11 +1,13 @@
 package com.xiangyang.floatinglightweather.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.xiangyang.floatinglightweather.data.bean.District
 import com.xiangyang.floatinglightweather.databinding.ItemDistrictsBinding
+import com.xiangyang.floatinglightweather.ui.WeatherActivity
 
 class DistrictsAdapter(private val fragment: Fragment, private val districtsList: List<District>) :
     RecyclerView.Adapter<DistrictsAdapter.DistrictsViewHolder>() {
@@ -14,7 +16,13 @@ class DistrictsAdapter(private val fragment: Fragment, private val districtsList
     ): DistrictsViewHolder {
         val binding =
             ItemDistrictsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DistrictsViewHolder(binding)
+        val viewHolder = DistrictsViewHolder(binding)
+        viewHolder.itemView.setOnClickListener {
+            val intent = Intent(parent.context, WeatherActivity::class.java)
+            fragment.startActivity(intent)
+            fragment.activity?.finish()
+        }
+        return viewHolder
     }
 
     override fun onBindViewHolder(
