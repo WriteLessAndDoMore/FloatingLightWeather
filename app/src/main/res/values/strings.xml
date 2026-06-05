@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FloatingLightWeather</string>
+    <string name="enter_address">Enter the address</string>
 </resources>
