@@ -19,7 +19,7 @@
             android:layout_marginBottom="20dp"
             android:text="@string/forecast"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="36sp"/>
+            android:textSize="28sp"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_forecast"
             android:layout_width="match_parent"

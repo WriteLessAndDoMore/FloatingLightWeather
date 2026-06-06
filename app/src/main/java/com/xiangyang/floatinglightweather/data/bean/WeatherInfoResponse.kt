@@ -28,7 +28,7 @@ data class WeatherInfoForecastsResponse(
     @SerializedName("count") val count: String,
     @SerializedName("info") val info: String,
     @SerializedName("infocode") val infoCode: String,
-    @SerializedName("forecasts") val forecasts: WeatherInfoForecasts
+    @SerializedName("forecasts") val forecasts: List<WeatherInfoForecasts>
 )
 
 data class WeatherInfoForecasts(

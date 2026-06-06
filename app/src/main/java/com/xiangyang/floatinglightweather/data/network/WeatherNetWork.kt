@@ -71,12 +71,12 @@ object WeatherNetWork {
             when (weatherInfoForecastsResponse.status) {
                 GDConstant.ResultParameters.STATUS_SUCCESS -> weatherInfoForecastsResponse
                 else -> {
-                    LogUtil.e("getWeatherNowInfo 高德接口返回失败原因：${weatherInfoForecastsResponse.info}")
+                    LogUtil.e("getWeatherForecastsInfo 高德接口返回失败原因：${weatherInfoForecastsResponse.info}")
                     null
                 }
             }
         } catch (e: Exception) {
-            LogUtil.e("getWeatherNowInfo 网络请求发生异常：${e.printStackTrace()}")
+            LogUtil.e("getWeatherForecastsInfo 网络请求发生异常：${e.message}")
             null
         }
     }

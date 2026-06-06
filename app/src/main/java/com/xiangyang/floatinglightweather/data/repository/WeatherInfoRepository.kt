@@ -35,15 +35,9 @@ object WeatherInfoRepository {
     suspend fun getWeatherForecastsInfo(city: String): List<WeatherInfoForecastsInfo> {
         return withContext(Dispatchers.IO) {
             val weatherInfoForecastsResponse = WeatherNetWork.getWeatherForecastsInfo(city)
-
-            val weatherCasts = weatherInfoForecastsResponse?.forecasts?.casts
-            if (!weatherCasts.isNullOrEmpty()) {
-                val resultList = mutableListOf<WeatherInfoForecastsInfo>()
-                resultList.addAll(weatherCasts)
-                resultList
-            } else {
-                emptyList()
-            }
+            // flatMap 遍历 forecasts，把里面每个 forecast 的 casts 提取出来，
+            // 自动合并平铺成一个统一的 List<WeatherInfoForecastsInfo> 返回。
+            weatherInfoForecastsResponse?.forecasts?.flatMap { it.casts } ?: emptyList()
         }
     }
 }

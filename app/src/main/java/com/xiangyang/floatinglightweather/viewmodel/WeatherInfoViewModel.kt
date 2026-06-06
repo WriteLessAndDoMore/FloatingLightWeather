@@ -10,6 +10,7 @@ import com.xiangyang.floatinglightweather.data.repository.WeatherInfoRepository
 import kotlinx.coroutines.launch
 
 class WeatherInfoViewModel: ViewModel() {
+    val forecastsInfoList = mutableListOf<WeatherInfoForecastsInfo>()
     private val _weatherInfoLivesResult = MutableLiveData<List<WeatherInfoLives>>()
     private val _weatherInfoForecastsResult = MutableLiveData<List<WeatherInfoForecastsInfo>>()
     val weatherInfoLivesResult: LiveData<List<WeatherInfoLives>> = _weatherInfoLivesResult
