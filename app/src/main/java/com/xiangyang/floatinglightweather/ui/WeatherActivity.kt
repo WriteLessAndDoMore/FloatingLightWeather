@@ -20,39 +20,39 @@ class WeatherActivity : AppCompatActivity() {
     private val weatherInfoViewModel: WeatherInfoViewModel by viewModels()
     private lateinit var binding: ActivityWeatherBinding
     private lateinit var adapter: WeatherForecastsAdapter
+    private var currentAdCode: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityWeatherBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initRecycleView()
-        val adCode = intent.getStringExtra(GDConstant.GeneralConstant.IntentKey.CITY_AD_CODE)
-        setWeatherInfo(adCode)
-        setWeatherInfoForecasts(adCode)
+        // 获取并保存搜索内容
+        currentAdCode = intent.getStringExtra(GDConstant.GeneralConstant.IntentKey.CITY_AD_CODE)
+        // 首次进入页面执行请求
+        refreshAndGetWeatherAllInfo()
+
+        binding.sflFreshWeather.setColorSchemeResources(R.color.teal_200)
+        binding.sflFreshWeather.setOnRefreshListener {
+            refreshAndGetWeatherAllInfo()
+        }
         initObserve()
 
+    }
+
+    // 封装统一的刷新/请求数据方法
+    private fun refreshAndGetWeatherAllInfo() {
+        if (!currentAdCode.isNullOrBlank()) {
+            weatherInfoViewModel.getWeatherAllInfo(currentAdCode!!)
+        } else {
+            LogUtil.e("错误：未获取到有效的城市代码，无法请求/刷新天气！")
+        }
     }
 
     private fun initRecycleView() {
         binding.icForecastWeather.rvForecast.layoutManager = LinearLayoutManager(this)
         adapter = WeatherForecastsAdapter(weatherInfoViewModel.forecastsInfoList)
         binding.icForecastWeather.rvForecast.adapter = adapter
-    }
-
-    private fun setWeatherInfo(adCode: String?) {
-        if (!adCode.isNullOrBlank()) {
-            weatherInfoViewModel.getWeatherInfoLives(adCode)
-        } else {
-            LogUtil.e("错误：未从上个页面接收到有效的城市代码！")
-        }
-    }
-
-    private fun setWeatherInfoForecasts(adCode: String?) {
-        if (!adCode.isNullOrBlank()) {
-            weatherInfoViewModel.getWeatherInfoForecasts(adCode)
-        } else {
-            LogUtil.e("错误：未从上个页面接收到有效的城市代码！")
-        }
     }
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
@@ -74,6 +74,10 @@ class WeatherActivity : AppCompatActivity() {
             weatherInfoViewModel.forecastsInfoList.clear()
             weatherInfoViewModel.forecastsInfoList.addAll(infos)
             adapter.notifyDataSetChanged()
+        }
+
+        weatherInfoViewModel.isRefreshing.observe(this) { isRefresh ->
+            binding.sflFreshWeather.isRefreshing = isRefresh
         }
     }
 }

@@ -48,8 +48,8 @@ data class WeatherInfoForecastsInfo(
     @SerializedName("nighttemp") val nightTemp: Int,
     @SerializedName("daywind") val dayWind: String,
     @SerializedName("nightwind") val nightWind: String,
-    @SerializedName("daypower") val dayPower: Int,
-    @SerializedName("nightpower") val nightPower: Int,
+    @SerializedName("daypower") val dayPower: String,
+    @SerializedName("nightpower") val nightPower: String,
     @SerializedName("daytemp_float") val dayTempFloat: Double,
     @SerializedName("nighttemp_float") val nightTempFloat: Double,
 )
