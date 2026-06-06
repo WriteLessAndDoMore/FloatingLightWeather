@@ -2,5 +2,7 @@
     <string name="app_name">FloatingLightWeather</string>
     <string name="enter_address">Enter the address</string>
     <string name="forecast">Forecast</string>
+    <string name="air_humidity">Air humidity</string>
+    <string name="separator">|</string>
 
 </resources>

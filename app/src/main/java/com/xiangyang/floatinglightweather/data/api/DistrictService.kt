@@ -1,6 +1,5 @@
 package com.xiangyang.floatinglightweather.data.api
 
-import com.xiangyang.floatinglightweather.base.WeatherApplication
 import com.xiangyang.floatinglightweather.constant.GDConstant
 import com.xiangyang.floatinglightweather.data.bean.DistrictResponse
 import retrofit2.Call
@@ -11,6 +10,11 @@ import retrofit2.http.Query
  * 获取城市相关接口
  */
 interface DistrictService {
+    /**
+     * 获取位置（省/市/区/县）
+     * @param keywords 位置名
+     * @return 位置信息
+     */
     @GET("v3/config/district")
     suspend fun getDistrictInfo(
         @Query("keywords") keywords: String,

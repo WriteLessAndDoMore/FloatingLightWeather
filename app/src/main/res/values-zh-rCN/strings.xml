@@ -2,4 +2,6 @@
     <string name="app_name">浮光天气</string>
     <string name="enter_address">输入地址</string>
     <string name="forecast">预报</string>
+    <string name="air_humidity">空气湿度</string>
+    <string name="separator">|</string>
 </resources>

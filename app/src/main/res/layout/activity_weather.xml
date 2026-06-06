@@ -18,8 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <include layout="@layout/activity_item_now_weather"/>
-            <include layout="@layout/activity_item_forecast_weather"/>
+            <include
+                android:id="@+id/ic_now_weather"
+                layout="@layout/activity_item_now_weather"/>
+            <include
+                android:id="@+id/ic_forecast_weather"
+                layout="@layout/activity_item_forecast_weather"/>
         </LinearLayout>
     </ScrollView>
 
