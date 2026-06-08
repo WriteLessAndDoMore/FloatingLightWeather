@@ -2,8 +2,10 @@ package com.xiangyang.floatinglightweather.data.network
 
 import com.xiangyang.floatinglightweather.constant.GDConstant
 import com.xiangyang.floatinglightweather.data.api.DistrictService
+import com.xiangyang.floatinglightweather.data.api.ReGeoCodeService
 import com.xiangyang.floatinglightweather.data.api.WeatherInfoService
 import com.xiangyang.floatinglightweather.data.bean.DistrictResponse
+import com.xiangyang.floatinglightweather.data.bean.ReGeoCodeResponse
 import com.xiangyang.floatinglightweather.data.bean.WeatherInfoForecastsResponse
 import com.xiangyang.floatinglightweather.data.bean.WeatherInfoNowResponse
 import com.xiangyang.floatinglightweather.util.LogUtil
@@ -12,6 +14,7 @@ object WeatherNetWork {
     // 获取api中的网络接口
     private val districtService = ServiceCreator.create<DistrictService>()
     private val weatherInfoService = ServiceCreator.create<WeatherInfoService>()
+    private val reGeoCodeService = ServiceCreator.create<ReGeoCodeService>()
 
     /**
      * 获取输入位置信息
@@ -77,6 +80,27 @@ object WeatherNetWork {
             }
         } catch (e: Exception) {
             LogUtil.e("getWeatherForecastsInfo 网络请求发生异常：${e.message}")
+            null
+        }
+    }
+
+    /**
+     * 根据经纬度获取adCode区域编码
+     * @param location 经纬度
+     * @return 主要获取区域编码
+     */
+    suspend fun getReGeoCode(location: String): ReGeoCodeResponse? {
+        return try {
+            val reGeoCodeResponse = reGeoCodeService.getReGeoCode(location)
+            when (reGeoCodeResponse.status) {
+                GDConstant.ResultParameters.STATUS_SUCCESS -> reGeoCodeResponse
+                else -> {
+                    LogUtil.e("getReGeoCode 高德接口返回失败原因：${reGeoCodeResponse.info}")
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            LogUtil.e("getReGeoCode 网络请求发生异常：${e.message}")
             null
         }
     }

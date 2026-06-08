@@ -18,7 +18,7 @@ import com.xiangyang.floatinglightweather.viewmodel.DistrictViewModel
 
 class DistrictsFragment : Fragment() {
     private val viewModel: DistrictViewModel by activityViewModels()
-    private lateinit var binding: FragmentDistrictsBinding
+    lateinit var binding: FragmentDistrictsBinding
     private lateinit var adapter: DistrictsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

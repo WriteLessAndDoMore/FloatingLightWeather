@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xiangyang.floatinglightweather.constant.GDConstant
 import com.xiangyang.floatinglightweather.data.bean.District
 import com.xiangyang.floatinglightweather.databinding.ItemDistrictsBinding
+import com.xiangyang.floatinglightweather.ui.DistrictsFragment
 import com.xiangyang.floatinglightweather.ui.WeatherActivity
 
 class DistrictsAdapter(private val fragment: Fragment, private val districtsList: List<District>) :
@@ -19,12 +20,22 @@ class DistrictsAdapter(private val fragment: Fragment, private val districtsList
             ItemDistrictsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val viewHolder = DistrictsViewHolder(binding)
         viewHolder.itemView.setOnClickListener {
-            val intent = Intent(parent.context, WeatherActivity::class.java)
             val district = districtsList[viewHolder.bindingAdapterPosition]
             val adCode = district.adCode as String
-            intent.putExtra(GDConstant.GeneralConstant.IntentKey.CITY_AD_CODE,adCode)
-            fragment.startActivity(intent)
-            fragment.activity?.finish()
+            val activity = fragment.activity
+            if (activity is WeatherActivity && fragment is DistrictsFragment) {
+                activity.binding.dlWeather.closeDrawers()
+                activity.refreshAndGetWeatherAllInfo(adCode)
+                activity.currentAdCode = adCode
+                fragment.binding.etSearch.text.clear()
+            } else {
+                val intent = Intent(parent.context, WeatherActivity::class.java)
+                intent.putExtra(GDConstant.GeneralConstant.IntentKey.CITY_AD_CODE,adCode)
+                fragment.startActivity(intent)
+                fragment.activity?.finish()
+            }
+
+
         }
         return viewHolder
     }

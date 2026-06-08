@@ -15,7 +15,7 @@ object WeatherInfoRepository {
      */
     suspend fun getWeatherNowInfo(city: String): List<WeatherInfoLives> {
         return withContext(Dispatchers.IO) {
-            LogUtil.d("getWeatherNowInfo cityCode: $city")
+            LogUtil.d("getWeatherNowInfo adCode: $city")
             val weatherInfoNowResponse = WeatherNetWork.getWeatherNowInfo(city)
             val lives = weatherInfoNowResponse?.lives
             if (!lives.isNullOrEmpty()) {
@@ -34,6 +34,7 @@ object WeatherInfoRepository {
      */
     suspend fun getWeatherForecastsInfo(city: String): List<WeatherInfoForecastsInfo> {
         return withContext(Dispatchers.IO) {
+            LogUtil.d("getWeatherForecastsInfo adCode: $city")
             val weatherInfoForecastsResponse = WeatherNetWork.getWeatherForecastsInfo(city)
             // flatMap 遍历 forecasts，把里面每个 forecast 的 casts 提取出来，
             // 自动合并平铺成一个统一的 List<WeatherInfoForecastsInfo> 返回。

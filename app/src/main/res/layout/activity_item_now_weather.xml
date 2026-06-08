@@ -6,6 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="630dp">
 
+    <ImageButton
+        android:id="@+id/bt_home"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_weather_search"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="45dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_now_place"
         android:layout_width="match_parent"

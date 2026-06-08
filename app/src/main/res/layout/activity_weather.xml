@@ -1,31 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sfl_fresh_weather"
+    android:id="@+id/dl_weather"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.WeatherActivity">
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/sfl_fresh_weather"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/ic_now_weather"
+                    layout="@layout/activity_item_now_weather" />
+
+                <include
+                    android:id="@+id/ic_forecast_weather"
+                    layout="@layout/activity_item_forecast_weather" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none"
-        android:visibility="visible">
+        android:layout_gravity="start"
+        android:background="@color/colorPrimary"
+        android:clickable="true"
+        android:focusable="true">
 
-        <LinearLayout
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fg_districts"
+            android:name="com.xiangyang.floatinglightweather.ui.DistrictsFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <include
-                android:id="@+id/ic_now_weather"
-                layout="@layout/activity_item_now_weather"/>
-            <include
-                android:id="@+id/ic_forecast_weather"
-                layout="@layout/activity_item_forecast_weather"/>
-        </LinearLayout>
-    </ScrollView>
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp" />
+    </FrameLayout>
 
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
