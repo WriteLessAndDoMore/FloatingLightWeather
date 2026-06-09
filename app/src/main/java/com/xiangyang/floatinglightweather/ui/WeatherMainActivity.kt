@@ -9,10 +9,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.xiangyang.floatinglightweather.R
 import com.xiangyang.floatinglightweather.constant.GDConstant
 import com.xiangyang.floatinglightweather.viewmodel.AdCodeStatus
 import com.xiangyang.floatinglightweather.viewmodel.ReGeoCodeViewModel
+import com.xiangyang.utillibrary.PermissionX
+import com.xiangyang.utillibrary.PermissionX.requestPermissionsAsync
+import kotlinx.coroutines.launch
 
 class WeatherMainActivity : AppCompatActivity() {
     private val reGeoCodeViewModel: ReGeoCodeViewModel by viewModels()
@@ -42,7 +46,23 @@ class WeatherMainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_weather_main)
         initObserve()
         // 核心时序改变：进来后不直接定位，而是先检查权限
-        checkAndRequestPermissions()
+        lifecycleScope.launch {
+            val pair = requestPermissionsAsync(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            if (pair.first) {
+                reGeoCodeViewModel.loadWeatherByLocation(this@WeatherMainActivity)
+            } else {
+                Toast.makeText(
+                    this@WeatherMainActivity,
+                    "由于您已经拒绝了定位权限，无法自动获取当前天气",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            }
+        }
+//        checkAndRequestPermissions()
     }
 
     /**
