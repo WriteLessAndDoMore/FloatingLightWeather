@@ -2,7 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
-
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
 android {
     namespace 'com.xiangyang.floatinglightweather'
     compileSdk {
@@ -20,11 +26,28 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            // 从 localProperties 中读取，如果读取不到则为 null
+            def path = localProperties.getProperty('KEY_PATH')
+            def storePass = localProperties.getProperty('KEY_PASSWORD')
+            def alias = localProperties.getProperty('KEY_ALIAS')
+            def keyPass = localProperties.getProperty('KEY_ALIAS_PASSWORD')
+            if (path && storePass && alias && keyPass) {
+                storeFile file(path)
+                storePassword storePass
+                keyAlias alias
+                keyPassword keyPass
+            }
+
+        }
+    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
