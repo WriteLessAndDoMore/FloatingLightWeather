@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    id 'maven-publish' // 1. 引入 Maven 发布插件
 }
 
 android {
@@ -20,7 +21,29 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    //告诉 Gradle 怎么发布：目前新版本 Gradle 推荐通过 singleVariant 统一配置发布
+    publishing {
+        singleVariant("release") {
+            withSourcesJar() // 可选：附带源码，方便别人引用时查看源码
+        }
+    }
 
+}
+// 配置发布细节
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                // 如果是新版 Gradle，直接关联上面配置的 release variant
+                from components.release
+
+                // 这里的信息会决定最终引用的坐标，JitPack 会自动映射，但写上是个好习惯
+                groupId = 'com.github.WriteLessAndDoMore'
+                artifactId = 'utillibrary' // Module 名字
+                version = '1.0.0'
+            }
+        }
+    }
 }
 
 dependencies {

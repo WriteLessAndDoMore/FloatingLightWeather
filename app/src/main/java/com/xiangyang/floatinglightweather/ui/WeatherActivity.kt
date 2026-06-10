@@ -55,10 +55,28 @@ class WeatherActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        // 处于可见状态，启动定时刷新
+        if (!currentAdCode.isNullOrBlank()) {
+            weatherInfoViewModel.checkAndRefresh(currentAdCode!!)
+            weatherInfoViewModel.startMinuteTimer(currentAdCode!!)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // 不可见停止无用刷新
+        weatherInfoViewModel.stopMinuteTimer()
+
+    }
+
     // 封装统一的刷新/请求数据方法
     private fun refreshAndGetWeatherAllInfo() {
         if (!currentAdCode.isNullOrBlank()) {
             weatherInfoViewModel.getWeatherAllInfo(currentAdCode!!)
+            // 此时无论是手动还是进入页面刷新都算是刷新需要定时器重新计时
+            weatherInfoViewModel.startMinuteTimer(currentAdCode!!)
         } else {
             LogUtil.e("错误：未获取到有效的城市代码，无法请求/刷新天气！")
         }
@@ -67,6 +85,8 @@ class WeatherActivity : AppCompatActivity() {
     fun refreshAndGetWeatherAllInfo(adCode: String?) {
         if (!adCode.isNullOrBlank()) {
             weatherInfoViewModel.getWeatherAllInfo(adCode)
+            // 搜索过来的也是最新天气不需要刷新重新启动定时器
+            weatherInfoViewModel.startMinuteTimer(adCode)
         } else {
             LogUtil.e("错误：未获取到有效的城市代码，无法请求/刷新天气！")
         }

@@ -14,7 +14,6 @@ import com.xiangyang.floatinglightweather.R
 import com.xiangyang.floatinglightweather.constant.GDConstant
 import com.xiangyang.floatinglightweather.viewmodel.AdCodeStatus
 import com.xiangyang.floatinglightweather.viewmodel.ReGeoCodeViewModel
-import com.xiangyang.utillibrary.PermissionX
 import com.xiangyang.utillibrary.PermissionX.requestPermissionsAsync
 import kotlinx.coroutines.launch
 
