@@ -12,9 +12,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.xiangyang.floatinglightweather.R
 import com.xiangyang.floatinglightweather.constant.GDConstant
+import com.xiangyang.floatinglightweather.util.showToast
 import com.xiangyang.floatinglightweather.viewmodel.AdCodeStatus
 import com.xiangyang.floatinglightweather.viewmodel.ReGeoCodeViewModel
 import com.xiangyang.utillibrary.PermissionX.requestPermissionsAsync
+import com.xiangyang.floatinglightweather.util.startActivity
 import kotlinx.coroutines.launch
 
 class WeatherMainActivity : AppCompatActivity() {
@@ -32,7 +34,7 @@ class WeatherMainActivity : AppCompatActivity() {
             val coarseGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
             if (fineGranted || coarseGranted) {
                 // 只要用户至少同意了其中一个定位权限，再去底层获取GPS定位
-                reGeoCodeViewModel.loadWeatherByLocation(this)
+                reGeoCodeViewModel.loadWeatherByLocation()
             } else {
                 // 用户无情拒绝，直接弹个 Toast 提示他
                 Toast.makeText(this, "由于您拒绝了定位权限，无法自动获取当前天气", Toast.LENGTH_LONG)
@@ -51,7 +53,7 @@ class WeatherMainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
             if (pair.first) {
-                reGeoCodeViewModel.loadWeatherByLocation(this@WeatherMainActivity)
+                reGeoCodeViewModel.loadWeatherByLocation()
             } else {
                 Toast.makeText(
                     this@WeatherMainActivity,
@@ -79,7 +81,7 @@ class WeatherMainActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
         if (hasFine || hasCoarse) {
             // 之前给过并且是允许状态，直接底层获取GPS定位
-            reGeoCodeViewModel.loadWeatherByLocation(this)
+            reGeoCodeViewModel.loadWeatherByLocation()
         } else {
             // 用户第一次打开或者之前没有授权，使用上面注册的“小助手”拉起权限弹窗
             locationPermissionLauncher.launch(
@@ -95,23 +97,12 @@ class WeatherMainActivity : AppCompatActivity() {
     private fun initObserve() {
         reGeoCodeViewModel.adCodeStatusLiveData.observe(this) { status ->
             when (status) {
-                is AdCodeStatus.LocationFail -> Toast.makeText(
-                    this,
-                    "定位服务不可用，请检查GPS或网络设置",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                is AdCodeStatus.ResponseFail -> Toast.makeText(
-                    this,
-                    "数据请求失败",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+                is AdCodeStatus.LocationFail -> "定位服务不可用，请检查GPS或网络设置".showToast()
+                is AdCodeStatus.ResponseFail -> "数据请求失败".showToast()
                 is AdCodeStatus.ResponseSuccess -> {
-                    val intent = Intent(this, WeatherActivity::class.java).apply {
+                    startActivity<WeatherActivity>{
                         putExtra(GDConstant.GeneralConstant.IntentKey.CITY_AD_CODE, status.adCode)
                     }
-                    startActivity(intent)
                     finish()
                 }
             }
