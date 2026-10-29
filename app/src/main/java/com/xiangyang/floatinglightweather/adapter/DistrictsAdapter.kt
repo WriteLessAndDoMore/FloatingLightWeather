@@ -11,7 +11,8 @@ import com.xiangyang.floatinglightweather.databinding.ItemDistrictsBinding
 import com.xiangyang.floatinglightweather.ui.DistrictsFragment
 import com.xiangyang.floatinglightweather.ui.WeatherActivity
 
-class DistrictsAdapter(private val fragment: Fragment, private val districtsList: List<District>) :
+typealias DistrictCallback = (district: District) -> Unit
+class DistrictsAdapter(private val districtsList: List<District>, private val districtCallback: DistrictCallback) :
     RecyclerView.Adapter<DistrictsAdapter.DistrictsViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -20,22 +21,7 @@ class DistrictsAdapter(private val fragment: Fragment, private val districtsList
             ItemDistrictsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val viewHolder = DistrictsViewHolder(binding)
         viewHolder.itemView.setOnClickListener {
-            val district = districtsList[viewHolder.bindingAdapterPosition]
-            val adCode = district.adCode as String
-            val activity = fragment.activity
-            if (activity is WeatherActivity && fragment is DistrictsFragment) {
-                activity.binding.dlWeather.closeDrawers()
-                activity.refreshAndGetWeatherAllInfo(adCode)
-                activity.currentAdCode = adCode
-                fragment.binding.etSearch.text.clear()
-            } else {
-                val intent = Intent(parent.context, WeatherActivity::class.java)
-                intent.putExtra(GDConstant.GeneralConstant.IntentKey.CITY_AD_CODE,adCode)
-                fragment.startActivity(intent)
-                fragment.activity?.finish()
-            }
-
-
+            districtCallback(districtsList[viewHolder.bindingAdapterPosition])
         }
         return viewHolder
     }

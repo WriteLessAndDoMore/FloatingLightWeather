@@ -6,14 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.xiangyang.floatinglightweather.R
 import com.xiangyang.floatinglightweather.adapter.DistrictsAdapter
+import com.xiangyang.floatinglightweather.constant.GDConstant
 import com.xiangyang.floatinglightweather.databinding.FragmentDistrictsBinding
+import com.xiangyang.floatinglightweather.util.showToast
 import com.xiangyang.floatinglightweather.viewmodel.DistrictViewModel
+import com.xiangyang.floatinglightweather.util.startActivity
 
 
 class DistrictsFragment : Fragment() {
@@ -63,11 +64,7 @@ class DistrictsFragment : Fragment() {
                 binding.ivBg.visibility = View.VISIBLE
                 viewModel.districtList.clear()
                 adapter.notifyDataSetChanged()
-                if (binding.etSearch.text.isNotBlank()) Toast.makeText(
-                    activity,
-                    "未查询到任何地点",
-                    Toast.LENGTH_LONG
-                ).show()
+                if (binding.etSearch.text.isNotBlank()) "未查询到任何地点".showToast()
             }
 
         }
@@ -77,7 +74,21 @@ class DistrictsFragment : Fragment() {
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(activity)
         binding.rvDistricts.layoutManager = layoutManager
-        adapter = DistrictsAdapter(this, viewModel.districtList)
+        adapter = DistrictsAdapter(viewModel.districtList) { district ->
+            val adCode = district.adCode
+            val activity = activity
+            if (activity is WeatherActivity) {
+                activity.binding.dlWeather.closeDrawers()
+                activity.refreshAndGetWeatherAllInfo(adCode)
+                activity.currentAdCode = adCode
+                binding.etSearch.text.clear()
+            } else {
+                startActivity<WeatherActivity> {
+                    putExtra(GDConstant.GeneralConstant.IntentKey.CITY_AD_CODE, adCode)
+                }
+                activity?.finish()
+            }
+        }
         binding.rvDistricts.adapter = adapter
     }
 
