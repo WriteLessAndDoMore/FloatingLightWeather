@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class WeatherInfoViewModel: ViewModel() {
+class WeatherInfoViewModel : ViewModel() {
     val forecastsInfoList = mutableListOf<WeatherInfoForecastsInfo>()
     private val _weatherInfoLivesResult = MutableLiveData<List<WeatherInfoLives>>()
     val weatherInfoLivesResult: LiveData<List<WeatherInfoLives>> = _weatherInfoLivesResult
@@ -40,6 +40,7 @@ class WeatherInfoViewModel: ViewModel() {
             _weatherInfoForecastsResult.value = weatherInfoForecasts
         }
     }
+
     fun checkAndRefresh(adCode: String) {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastRefreshTime >= refreshTimer) {

@@ -33,22 +33,25 @@ class WeatherActivity : AppCompatActivity() {
         // 获取并保存搜索内容
         currentAdCode = intent.getStringExtra(GDConstant.GeneralConstant.IntentKey.CITY_AD_CODE)
         // 首次进入页面执行请求
-        refreshAndGetWeatherAllInfo()
+        refreshAndGetWeatherAllInfo(currentAdCode)
 
         binding.sflFreshWeather.setColorSchemeResources(R.color.teal_200)
         binding.sflFreshWeather.setOnRefreshListener {
-            refreshAndGetWeatherAllInfo()
+            refreshAndGetWeatherAllInfo(currentAdCode)
         }
         binding.icNowWeather.btHome.setOnClickListener {
             binding.dlWeather.openDrawer(GravityCompat.START)
         }
-        binding.dlWeather.addDrawerListener(object : DrawerLayout.DrawerListener{
+        binding.dlWeather.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(p0: View, p1: Float) {}
             override fun onDrawerOpened(p0: View) {}
             override fun onDrawerStateChanged(p0: Int) {}
-            override fun onDrawerClosed(view : View) {
+            override fun onDrawerClosed(view: View) {
                 val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                manager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                manager.hideSoftInputFromWindow(
+                    view.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
             }
         })
         initObserve()
@@ -58,9 +61,9 @@ class WeatherActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         // 处于可见状态，启动定时刷新
-        if (!currentAdCode.isNullOrBlank()) {
-            weatherInfoViewModel.checkAndRefresh(currentAdCode!!)
-            weatherInfoViewModel.startMinuteTimer(currentAdCode!!)
+        currentAdCode.takeIf { !it.isNullOrBlank() }?.let {
+            weatherInfoViewModel.checkAndRefresh(it)
+            weatherInfoViewModel.startMinuteTimer(it)
         }
     }
 
@@ -72,24 +75,12 @@ class WeatherActivity : AppCompatActivity() {
     }
 
     // 封装统一的刷新/请求数据方法
-    private fun refreshAndGetWeatherAllInfo() {
-        if (!currentAdCode.isNullOrBlank()) {
-            weatherInfoViewModel.getWeatherAllInfo(currentAdCode!!)
-            // 此时无论是手动还是进入页面刷新都算是刷新需要定时器重新计时
-            weatherInfoViewModel.startMinuteTimer(currentAdCode!!)
-        } else {
-            LogUtil.e("错误：未获取到有效的城市代码，无法请求/刷新天气！")
-        }
-    }
-
     fun refreshAndGetWeatherAllInfo(adCode: String?) {
-        if (!adCode.isNullOrBlank()) {
-            weatherInfoViewModel.getWeatherAllInfo(adCode)
-            // 搜索过来的也是最新天气不需要刷新重新启动定时器
-            weatherInfoViewModel.startMinuteTimer(adCode)
-        } else {
-            LogUtil.e("错误：未获取到有效的城市代码，无法请求/刷新天气！")
-        }
+        adCode.takeIf { !it.isNullOrBlank() }?.let {
+            weatherInfoViewModel.getWeatherAllInfo(it)
+            // 此时无论是手动还是进入页面刷新都算是刷新需要定时器重新计时
+            weatherInfoViewModel.startMinuteTimer(it)
+        } ?: LogUtil.e("错误：未获取到有效的城市代码，无法请求/刷新天气！")
     }
 
     private fun initRecycleView() {
@@ -120,6 +111,7 @@ class WeatherActivity : AppCompatActivity() {
         }
 
         weatherInfoViewModel.isRefreshing.observe(this) { isRefresh ->
+            LogUtil.d("isRefresh: isRefresh")
             binding.sflFreshWeather.isRefreshing = isRefresh
         }
     }
